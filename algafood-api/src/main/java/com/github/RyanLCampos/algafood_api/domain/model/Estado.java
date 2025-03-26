@@ -1,13 +1,14 @@
 package com.github.RyanLCampos.algafood_api.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "cozinha")
-public class Cozinha {
+@Table(name = "estado")
+public class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

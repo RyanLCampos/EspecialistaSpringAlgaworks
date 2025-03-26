@@ -14,14 +14,22 @@ import java.math.BigDecimal;
 @Table(name = "restaurante")
 public class Restaurante {
 
-    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
-    @Column(name = "taxa_frete")
+    @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
+
+    @JoinColumn(name = "cozinha_id", nullable = false)
+    @ManyToOne
+    private Cozinha cozinha;
+
+    @JoinColumn(name = "forma_pagamento_id", nullable = false)
+    @ManyToOne
+    private FormaPagamento formaPagamento;
 }
