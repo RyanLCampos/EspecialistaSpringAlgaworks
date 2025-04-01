@@ -1,16 +1,15 @@
 package com.github.RyanLCampos.algafood_api.domain.repository;
 
 import com.github.RyanLCampos.algafood_api.domain.model.Estado;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface EstadoRepository {
 
-    List<Estado> todos();
+public interface EstadoRepository extends JpaRepository<Estado, Long> {
 
-    Estado porId(Long id);
+    List<Estado> findAll();
 
-    Estado adicionar(Estado estado);
-
-    void remover(Estado estado);
+    Optional<Estado> findById(Long id);
 }

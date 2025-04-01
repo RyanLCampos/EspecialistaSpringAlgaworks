@@ -1,17 +1,17 @@
 package com.github.RyanLCampos.algafood_api.domain.repository;
 
 import com.github.RyanLCampos.algafood_api.domain.model.Cozinha;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface CozinhaRepository {
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
-    List<Cozinha> todos();
+    List<Cozinha> findAll();
 
-    Cozinha porId(Long id);
+    Optional<Cozinha> findById(Long id);
 
-    Cozinha adicionar(Cozinha cozinha);
-
-    void remover(Cozinha cozinha);
+    Cozinha save(Cozinha cozinha);
 
 }
