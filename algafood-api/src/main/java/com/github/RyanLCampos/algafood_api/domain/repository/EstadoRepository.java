@@ -8,8 +8,4 @@ import java.util.Optional;
 
 
 public interface EstadoRepository extends JpaRepository<Estado, Long> {
-
-    List<Estado> findAll();
-
-    Optional<Estado> findById(Long id);
 }

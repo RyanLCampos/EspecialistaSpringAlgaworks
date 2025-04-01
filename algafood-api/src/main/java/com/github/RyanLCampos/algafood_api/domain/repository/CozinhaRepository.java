@@ -8,10 +8,4 @@ import java.util.Optional;
 
 public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
-    List<Cozinha> findAll();
-
-    Optional<Cozinha> findById(Long id);
-
-    Cozinha save(Cozinha cozinha);
-
 }
