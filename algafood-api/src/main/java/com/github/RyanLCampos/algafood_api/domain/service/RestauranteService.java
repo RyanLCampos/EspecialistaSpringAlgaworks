@@ -36,8 +36,12 @@ public class RestauranteService {
         return restauranteRepository.findById(id);
     }
 
+    public void deletar(Restaurante restaurante){
+        restauranteRepository.delete(restaurante);
+    }
+
     private void existeCozinha(Long cozinhaId){
-        Cozinha cozinha = cozinhaService.porId(cozinhaId);
+        Cozinha cozinha = cozinhaService.obterPorId(cozinhaId);
 
         if(cozinha == null) {
             throw new EntidadeNaoEncontradoException(
