@@ -1,5 +1,6 @@
 package com.github.RyanLCampos.algafood_api.api.controller;
 
+import com.github.RyanLCampos.algafood_api.domain.exception.EntidadeEmUsoException;
 import com.github.RyanLCampos.algafood_api.domain.exception.EntidadeNaoEncontradoException;
 import com.github.RyanLCampos.algafood_api.domain.model.Estado;
 import com.github.RyanLCampos.algafood_api.domain.service.EstadoService;
@@ -55,6 +56,20 @@ public class EstadoController {
     public ResponseEntity<List<Estado>> listar(){
         List<Estado> estados = estadoService.obterTodos();
         return ResponseEntity.ok(estados);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> remover(@PathVariable("id") Long id){
+        try{
+
+            estadoService.deletar(id);
+
+            return ResponseEntity.noContent().build();
+        }catch (EntidadeNaoEncontradoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (EntidadeEmUsoException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
 

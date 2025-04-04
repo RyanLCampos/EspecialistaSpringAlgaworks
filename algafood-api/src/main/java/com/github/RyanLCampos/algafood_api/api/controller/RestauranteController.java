@@ -5,11 +5,14 @@ import com.github.RyanLCampos.algafood_api.domain.model.Restaurante;
 import com.github.RyanLCampos.algafood_api.domain.service.RestauranteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -66,8 +69,30 @@ public class RestauranteController {
             }
 
             return ResponseEntity.notFound().build();
-        }catch (EntidadeNaoEncontradoException e){
+        }catch (EntidadeNaoEncontradoException | DataIntegrityViolationException e){
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable("id") Long id){
+        try {
+            Optional<Restaurante> optionalRestaurante = restauranteService.obterPorId(id);
+
+            if(optionalRestaurante.isEmpty()){
+                throw new EntidadeNaoEncontradoException(
+                        String.format("Não existe restaurante cadastrado com código: %d", id)
+                );
+            }
+
+            restauranteService.deletar(optionalRestaurante.get());
+
+            return ResponseEntity.noContent().build();
+
+        }catch (EntidadeNaoEncontradoException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
