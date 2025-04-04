@@ -1,5 +1,6 @@
 package com.github.RyanLCampos.algafood_api.api.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.RyanLCampos.algafood_api.domain.exception.EntidadeNaoEncontradoException;
 import com.github.RyanLCampos.algafood_api.domain.model.Restaurante;
 import com.github.RyanLCampos.algafood_api.domain.service.RestauranteService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
@@ -74,6 +76,23 @@ public class RestauranteController {
         }
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> atualizarParcial(@PathVariable("id") Long id,
+                                              @RequestBody Map<String, Object> campos){
+        Optional<Restaurante> restauranteOptional = restauranteService.obterPorId(id);
+
+        if(restauranteOptional.isPresent()){
+
+            Restaurante restauranteAtual = restauranteOptional.get();
+
+            merge(campos, restauranteAtual);
+
+            return atualizar(id, restauranteAtual);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable("id") Long id){
@@ -95,4 +114,21 @@ public class RestauranteController {
         }
     }
 
+    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+
+        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade); // Procura a propriedade dentro da entidade
+            assert field != null;
+            field.setAccessible(true);
+
+            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem); // Busca o valor dentro do restauranteOrigem
+
+            ReflectionUtils.setField(field, restauranteDestino, novoValor); // Atribui o valor ao restaurante
+        });
+
+    }
 }
