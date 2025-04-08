@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -31,6 +32,11 @@ public class TesteController {
     public List<Restaurante> restaurantesComFreteGratis(String nome){
 
         return repository.findComFreteGratis(nome);
+    }
+
+    @GetMapping("/restaurantes/primeiro")
+    public Optional<Restaurante> restaurantePrimeiro() {
+        return repository.buscarPrimeiro();
     }
 
 }
